@@ -29,6 +29,11 @@ async fn main() {
 
     tracing::info!("Successfully connected to database");
 
+    sqlx::migrate!()
+        .run(&pool)
+        .await
+        .expect("Failed to run migrations");
+
     let repository = infra::db::postgres::EventRepository::new(pool);
     let (tx, _rx) = broadcast::channel(100);
 
